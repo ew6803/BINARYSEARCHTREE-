@@ -1,7 +1,8 @@
-// This program is a heap, allowing the user to input a set of numbers either manually by console or with a file, and it outputs the max heap binary tree and output.
+// This program is a binary search tree, it does something. Good Comment.
 // Ethan Wang
-// 2/24/20
+// 3/9/20
 
+#include "Node.h"
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -9,107 +10,63 @@
 #include <cstdlib>
 
 using namespace std;
-//Function Prototypes
-void heap (int* array, int input, int count);
-void build (int* array, int count);
-void printree (int* array, int count, int input, int input2); 
-
-//Main Line, Calls Functions, has UI 
 int main() {
-  char* input = new char[50];
-  cout << "Do you want to input a 'file' or through 'console'? \n";
-  cin.getline(input, 50);
+  char* input = new char[1000];
+  cout << "File, Console? Take your Pick, you have a variety of options";
+  cin.getline(input, 1000);
   int count = 0;
-  int* array = new int[250];
-  //Console Input
-  if(strcmp(input, "console") == 0) {
-    cout << "Enter the numbers you want to add to the heap, seperate each one with a space \n";
-    char* input2 = new char[250];
-    cin.getline(input2, 250);
-    char* token = strtok(input2, " ");
-    int index = 1;
-    while(token != NULL) {
-      array[index] = atoi(token);
-      token = strtok(NULL, " ");
-      index++;
-      count++;
+  bool running = true; 
+  int* array = new int[1000];
+  if(strcmp(input, "CONSOLE") == 0) {
+      cout << "Enter numbers with spaces to seperate \n";
+      char* input2 = new char[1000];
+      cin.getline(input2, 1000);
+      char* token = strtok(input2, " ");
+      while (token != NULL) {
+	array[count] = atoi(token);
+        token = strtok(NULL, " ");
+	count++;
+      }
     }
-  }
-  //File Input
-  else if (strcmp(input, "file") == 0) {
-    cout << "Filename? \n";
-    char* filename = new char[50];
-    cin.getline(filename, 50);
-    ifstream inFile;
-    inFile.open(filename);
-    char* input2 = new char[250];
-    int count2 = 0;
-    int index2 = 1;
-    while (inFile >> count2) {
-      array[index2] = count2;
-      index2++;
-      count++;
+    if (strcmp(input, "FILE") == 0) {
+      cout << "Enter File Name: /n";
+      char* fileName = new char[1000];
+      cin.getline(fileName, 1000);
+      ifstream inFile;
+      inFile.open(fileName);
+      int count2 = 0;
+      while (inFile >> count2) {
+	array[count] = count2;
+	count++; 
+      }
     }
-  }
-  else {
-    cout << "Please enter understandable input.";
-  }
-  //Builds Heap and Prints out Tree along with Regular Greatest to Least Output, Deletes Each Number After Printed in Output
-  build(array, count);
-  cout << "Tree: \n";
-  printree(array, count, 0, 1); 
-  cout << " " << endl; 
-  cout << "Heap Output: ";
-  for (int i = count; i > 0; i--) {
-    cout << array[1] << " "; 
-    array[1] = array[i];
-    array[i] = 0; 
-    build(array, i);
-    array[i] = array[i - 1]; 
-  }  
-}
-//Function to sort the Heap into greatest to least
-void heap (int* array, int input, int count) {
-  int index;
-  int temp;
-  temp = array[input];
-  index = input*2;
-  while (index <= count) {
-    if (array[index+1] > array[index] && index < count)
-      index = index + 1;
-    if (temp > array[index])
-      break;
-    else if (temp <= array[index]) {
-      array[index/2] = array[index];
-      index = 2 * index;
+    Node* head = new Node();
+    for (int i = 0; i < count; i++) {
+      //addnode each time
     }
-  }
-  array[index/2] = temp;
-  return; 
-}
+    //Further Command Line
+    while (running == true) {
+      cout << "You can do stuff now, you can ADD, DELETE, PRINT, EXIT /n";
+      char* getInput = new char[50];
+      cin.getline(getInput, 50);
+      int wadd = 0;
+      if (strcmp(getInput, "ADD") == 0) {
+	//Function!
+	}
+      else if (strcmp(getInput, "DELETE") == 0) {
+	//Function!
+	}
+      else if (strcmp(getInput, "PRINT") == 0) {
+        //Function!
+      }
+      else if (strcmp(getInput, "EXIT") == 0) {
+	running = false; 
+      }
+      else {
+        cout << "Valid Input Plz \n"; 
+      }
+    }
 
-//Builds heap with entire array and heap sort function
-void build (int* array, int count) {
-  int i;
-  for(i = count/2; i >= 1; i--) {
-    heap(array, i, count); 
-  }  
-}
 
-//Prints Max Heap Tree 
-void printree (int* array, int count, int input, int input2) {
-  int leftposition = 2*input2;
-  int rightposition = 2*input2+1;
-  if (rightposition <= count) {
-    printree(array, count, input+1, rightposition); 
-  }
-  int current = input;
-  while (input > 0) {
-    cout << "    ";
-    input--; 
-  }
-  cout << array[input2] << endl;
-  if (leftposition <= count) {
-    printree(array, count, current + 1, leftposition); 
-  }
+  return 0; 
 }
