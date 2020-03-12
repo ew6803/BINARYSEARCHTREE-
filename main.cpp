@@ -1,4 +1,4 @@
-// This program is a binary search tree, it does something. Good Comment.
+// This program is a binary search tree, allows user to enter numbers through console or file and makes it into a binary tree. User can add to it, search for certain numbers, delete certain numbers, and also see the tree (print). 
 // Ethan Wang
 // 3/9/20
 
@@ -10,12 +10,14 @@
 #include <cstdlib>
 
 using namespace std;
-
+//Prototypes
 void add(Node* head, int wadd);
 void print(Node* head, int format);
-Node* deleteN(Node* head, int wadd);
-void search(Node* head, bool rsearch, int wsearch); 
+Node* deleteN(Node* head, int wdel);
+void search(Node* head, bool rsearch, int wsearch);
+Node* small(Node* head); 
 
+//Main Line, UI, Function Caller
 int main() {
   char* input = new char[1000];
   cout << "File, Console? Take your Pick, you have a variety of options \n";
@@ -35,7 +37,7 @@ int main() {
       }
     }
     if (strcmp(input, "FILE") == 0) {
-      cout << "Enter File Name: /n";
+      cout << "Enter File Name: \n";
       char* fileName = new char[1000];
       cin.getline(fileName, 1000);
       ifstream inFile;
@@ -56,17 +58,28 @@ int main() {
       char* getInput = new char[50];
       cin.getline(getInput, 50);
       int wadd = 0;
+      int wdel = 0;
       int wsearch = 0;
       bool rsearch = false; 
       if (strcmp(getInput, "ADD") == 0) {
 	cout << "Enter number you would like to add \n";
 	cin >> wadd;
 	cin.get();
-	add(head, wadd); 
+	add(head, wadd);
+	cout << "Added \n";
 	}
       else if (strcmp(getInput, "DELETE") == 0) {
 	//Function!
-	
+	cout << "What number do you want to delete? \n";
+	cin >> wdel;
+	cin.ignore(9999, '\n');
+	if (head -> getLeft() == NULL && head -> getRight() == NULL) {
+	  head -> setData(NULL);
+	}
+	else {
+	  head = deleteN(head, wdel);
+	}
+	cout << "Deleted \n";
 	}
       else if (strcmp(getInput, "PRINT") == 0) {
         //Function!
@@ -91,39 +104,39 @@ int main() {
 
   return 0; 
 }
-
+//Add to Tree
 void add(Node* head, int wadd) {
   if (head -> getData() == NULL) {
     head -> setData(wadd);
     return; 
   }
-  else if (head -> getData() < wadd) {
-    if (head -> getRight() != NULL) {
-      Node* temp = head -> getRight();
-      add(temp, wadd); 
+  else if (head -> getData() > wadd) {
+    if (head -> getLeft() != NULL) {
+      Node* add2 = head -> getLeft();
+      add(add2, wadd); 
     }
     else {
-      Node* temp = new Node();
-      temp -> setData(wadd);
-      head -> setRight(temp);
+      Node* add2 = new Node();
+      add2 -> setData(wadd);
+      head -> setLeft(add2);
       return; 
     }
   }
-  else if (head -> getData() > wadd) {
-    if (head -> getLeft() != NULL) {
-      Node* temp = head -> getLeft();
-      add(temp, wadd); 
+  else if (head -> getData() < wadd) {
+    if (head -> getRight() != NULL) {
+      Node* add2 = head -> getRight();
+      add(add2, wadd); 
     }
     else {
-      Node* temp = new Node();
-      temp -> setData(wadd);
-      head -> setLeft(temp);
+      Node* add2 = new Node();
+      add2 -> setData(wadd);
+      head -> setRight(add2);
       return; 
     }
   }
   return; 
 }
-
+//Print out Tree
 void print(Node* head, int format) {
   if (head == NULL) 
     return;
@@ -135,11 +148,31 @@ void print(Node* head, int format) {
     cout << head -> getData();
     print(head -> getLeft(), format); 
 }
-
-Node* deleteN(Node* head, int wadd) {
-  //This seems hard, i will leave it for now. 
+//Delete Node of Tree 
+Node* deleteN(Node* head, int wdel) {
+  if (head -> getData() > wdel) {
+    head -> setLeft(deleteN(head -> getLeft(), wdel)); 
+  }
+  else if (head -> getData() < wdel) {
+    head -> setRight(deleteN(head -> getRight(), wdel));
+  }
+  else {
+    if (head -> getLeft() == NULL) {
+      Node* temp = head -> getRight();
+      free(head);
+      return temp; 
+    }
+    else if (head -> getRight() == NULL) {
+      Node* temp = head -> getLeft();
+      free(head);
+      return temp; 
+    }
+    Node* temp = small(head -> getRight());
+    head -> setData(temp -> getData());
+    head -> setRight(deleteN(head -> getRight(), temp -> getData())); 
+  }
 }
-
+//Search for specific node
 void search(Node* head, bool rsearch, int wsearch) { 
   Node* filler = NULL;
   int tracker = 0;
@@ -162,4 +195,12 @@ void search(Node* head, bool rsearch, int wsearch) {
       }
   }
     
+}
+//Finds Smallest
+Node* small(Node* head) {
+  Node* current = head;
+  while (current -> getLeft() != NULL) {
+    current = current -> getLeft(); 
+  }
+  return current; 
 }

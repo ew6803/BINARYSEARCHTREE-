@@ -20,7 +20,7 @@ Node* small(Node* head);
 //Main Line, UI, Function Caller
 int main() {
   char* input = new char[1000];
-  cout << "File, Console? Take your Pick, you have a variety of options \n";
+  cout << "File (FILE), Console (CONSOLE)? Take your Pick, you have a variety of options \n";
   cin.getline(input, 1000);
   int count = 0;
   bool running = true;
@@ -110,18 +110,6 @@ void add(Node* head, int wadd) {
     head -> setData(wadd);
     return; 
   }
-  else if (head -> getData() < wadd) {
-    if (head -> getRight() != NULL) {
-      Node* add2 = head -> getRight();
-      add(add2, wadd); 
-    }
-    else {
-      Node* add2 = new Node();
-      add2 -> setData(wadd);
-      head -> setRight(add2);
-      return; 
-    }
-  }
   else if (head -> getData() > wadd) {
     if (head -> getLeft() != NULL) {
       Node* add2 = head -> getLeft();
@@ -131,6 +119,18 @@ void add(Node* head, int wadd) {
       Node* add2 = new Node();
       add2 -> setData(wadd);
       head -> setLeft(add2);
+      return; 
+    }
+  }
+  else if (head -> getData() < wadd) {
+    if (head -> getRight() != NULL) {
+      Node* add2 = head -> getRight();
+      add(add2, wadd); 
+    }
+    else {
+      Node* add2 = new Node();
+      add2 -> setData(wadd);
+      head -> setRight(add2);
       return; 
     }
   }
@@ -158,16 +158,16 @@ Node* deleteN(Node* head, int wdel) {
   }
   else {
     if (head -> getLeft() == NULL) {
-      Node* temp = head -> getRight();
+      Node* del = head -> getRight();
       free(head);
-      return temp; 
+      return del; 
     }
     else if (head -> getRight() == NULL) {
-      Node* temp = head -> getLeft();
+      Node* del = head -> getLeft();
       free(head);
-      return temp; 
+      return del; 
     }
-    Node* temp = small(head -> getRight());
+    Node* del = small(head -> getRight());
     head -> setData(temp -> getData());
     head -> setRight(deleteN(head -> getRight(), temp -> getData())); 
   }
